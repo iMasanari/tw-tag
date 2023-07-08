@@ -1,0 +1,37 @@
+{
+  "name": "tw-tag",
+  "version": "0.1.0",
+  "description": "",
+  "main": "./dist/tw-tag.js",
+  "module": "./dist/tw-tag.mjs",
+  "types": "./dist/tw-tag.d.ts",
+  "exports": {
+    ".": {
+        "import": "./dist/tw-tag.mjs",
+        "default": "./dist/tw-tag.js"
+    },
+    "./babel-plugin":{
+      "import": "./dist/babel-plugin.mjs",
+      "default": "./dist/babel-plugin.js"
+    }
+  },
+  "files": [
+    "dist",
+    "babel-plugin"
+  ],
+  "scripts": {
+    "build": "rollup -c rollup.config.mjs",
+    "test": "vitest run"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.22.6",
+    "@types/babel__core": "^7.20.1",
+    "rollup-plugin-dts": "^5.3.0",
+    "rollup-plugin-esbuild": "^5.0.0",
+    "typescript": "^5.1.6",
+    "vitest": "^0.32.4"
+  }
+}
