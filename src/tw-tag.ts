@@ -1,16 +1,23 @@
 type Compress<T extends string> =
-  T extends `${infer U}  ${infer R}` ? Compress<`${U} ${R}`> : T
+  T extends `${infer U}     ${infer R}` ? Compress<`${U} ${R}`> :
+  T extends `${infer U}   ${infer R}` ? Compress<`${U} ${R}`> :
+  T extends `${infer U}  ${infer R}` ? Compress<`${U} ${R}`> :
+  T
 
 type Trim<T extends string> =
-  T extends ` ${infer R}` ? Trim<R> :
+  T extends ` ${infer U}` ? Trim<U> :
   T extends `${infer U} ` ? Trim<U> :
   T
 
 type Normalize<T extends string> =
-  T extends `${infer U}${'\f' | '\n' | '\r' | '\t'}${infer R}` ? `${U} ${Normalize<R>}` : T
+  T extends `${infer U}\f${infer R}` ? Normalize<`${U} ${R}`> :
+  T extends `${infer U}\n${infer R}` ? Normalize<`${U} ${R}`> :
+  T extends `${infer U}\r${infer R}` ? Normalize<`${U} ${R}`> :
+  T extends `${infer U}\t${infer R}` ? Normalize<`${U} ${R}`> :
+  T
 
 interface Tw {
-  <T extends string>(template: T): Compress<Trim<Normalize<T>>>
+  <T extends string>(template: T): Trim<Compress<Normalize<T>>>
   (template: TemplateStringsArray, ...args: string[]): string
 }
 
