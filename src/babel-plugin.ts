@@ -31,11 +31,25 @@ const replaceStringLeteral = (path: NodePath<t.Node>, template: t.StringLiteral)
   path.replaceWith(template)
 }
 
+const removeUnusedImports = (path: NodePath<t.ImportSpecifier>) => {
+  const binding = path.scope.getBinding(path.node.local.name)
+
+  if (!binding || binding.referencePaths.length !== 0) {
+    return
+  }
+
+  path.remove()
+
+  if (path.parent.type === 'ImportDeclaration' && path.parent.specifiers.length === 0) {
+    path.parentPath.remove()
+  }
+}
+
 interface PluginOptions {
   types: typeof t
 }
 
-const plugin = ({ types: t }: PluginOptions): PluginObj => {
+export default ({ types: t }: PluginOptions): PluginObj => {
   return {
     name: 'tw-tag/babel-plugin',
     visitor: {
@@ -51,7 +65,11 @@ const plugin = ({ types: t }: PluginOptions): PluginObj => {
 
         const binding = path.scope.getBinding(path.node.local.name)
 
-        binding?.referencePaths.forEach(ref => {
+        if (!binding) {
+          return
+        }
+
+        binding.referencePaths.forEach(ref => {
           const target = ref.parentPath
 
           if (target?.isTaggedTemplateExpression()) {
@@ -73,9 +91,10 @@ const plugin = ({ types: t }: PluginOptions): PluginObj => {
             }
           }
         })
+
+        path.scope.crawl()
+        removeUnusedImports(path)
       },
     },
   }
 }
-
-export default plugin

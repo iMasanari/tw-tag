@@ -16,7 +16,7 @@ it('tw`...`', async () => {
     plugins: [plugin],
   })
 
-  expect(actual?.code).toBe('import { tw } from "tw-tag";\n`a b ${"c"}`;')
+  expect(actual?.code).toBe('`a b ${"c"}`;')
 })
 
 it('tw(`...`)', async () => {
@@ -33,7 +33,7 @@ it('tw(`...`)', async () => {
     plugins: [plugin],
   })
 
-  expect(actual?.code).toBe('import { tw } from "tw-tag";\n`a b ${"c"}`;')
+  expect(actual?.code).toBe('`a b ${"c"}`;')
 })
 
 it('tw("...")', async () => {
@@ -47,7 +47,7 @@ it('tw("...")', async () => {
     plugins: [plugin],
   })
 
-  expect(actual?.code).toBe('import { tw } from "tw-tag";\n"a b c";')
+  expect(actual?.code).toBe('"a b c";')
 })
 
 it('import as other name', async () => {
@@ -64,5 +64,33 @@ it('import as other name', async () => {
     plugins: [plugin],
   })
 
-  expect(actual?.code).toBe('import { tw as OTHER_NAME } from "tw-tag";\n`a b ${"c"}`;')
+  expect(actual?.code).toBe('`a b ${"c"}`;')
+})
+
+it('Import is not removed when referenced.', async () => {
+  const code = `
+    import { tw } from "tw-tag";
+    
+    console.log(tw);
+  `
+
+  const actual = await transformAsync(code, {
+    plugins: [plugin],
+  })
+
+  expect(actual?.code).toBe('import { tw } from "tw-tag";\nconsole.log(tw);')
+})
+
+it('Imports other than `tw` are not removed.', async () => {
+  const code = `
+    import { tw, xxx } from "tw-tag";
+    
+    tw("a");
+  `
+
+  const actual = await transformAsync(code, {
+    plugins: [plugin],
+  })
+
+  expect(actual?.code).toBe('import { xxx } from "tw-tag";\n"a";')
 })

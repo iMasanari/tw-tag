@@ -42,7 +42,8 @@ module.exports = {
 ```
 
 ```js
-// code
+// before
+import { tw } from 'tw-tag'
 
 const tailwindClassName = tw`
   flex
@@ -50,8 +51,9 @@ const tailwindClassName = tw`
   text-center
   rotate-90
 `
-// ↓
-const tailwindClassName = 'flex pt-4 text-center rotate-90'
+
+// after
+const tailwindClassName = `flex pt-4 text-center rotate-90`
 ```
 
 ### in TypeScript
