@@ -1,16 +1,16 @@
 {
   "name": "tw-tag",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "main": "./dist/tw-tag.js",
   "module": "./dist/tw-tag.mjs",
   "types": "./dist/tw-tag.d.ts",
   "exports": {
     ".": {
-        "import": "./dist/tw-tag.mjs",
-        "default": "./dist/tw-tag.js"
+      "import": "./dist/tw-tag.mjs",
+      "default": "./dist/tw-tag.js"
     },
-    "./babel-plugin":{
+    "./babel-plugin": {
       "import": "./dist/babel-plugin.mjs",
       "default": "./dist/babel-plugin.js"
     }
