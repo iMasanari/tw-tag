@@ -19,3 +19,24 @@ it('tw(`...`)', () => {
   expect(actual).toBe('a b c')
 })
 
+it('tw`...${...}...`', () => {
+  let c = 'c'
+
+  const actual: string = tw`
+    a   b
+    ${c}
+  `
+
+  expect(actual).toBe('a b c')
+})
+
+it('tw(`...${...}...`)', () => {
+  let c = 'c'
+
+  const actual: `a b ${string}` = tw(`
+    a   b
+    ${c}
+  `)
+
+  expect(actual).toBe('a b c')
+})

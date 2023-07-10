@@ -7,8 +7,8 @@ it('tw`...`', async () => {
     import { tw } from "tw-tag";
     
     tw\`
-      a b
-      c
+      a  b
+      \${"c"}
     \`;
   `
 
@@ -16,7 +16,7 @@ it('tw`...`', async () => {
     plugins: [plugin],
   })
 
-  expect(actual?.code).toBe('import { tw } from "tw-tag";\n"a b c";')
+  expect(actual?.code).toBe('import { tw } from "tw-tag";\n`a b ${"c"}`;')
 })
 
 it('tw(`...`)', async () => {
@@ -24,8 +24,8 @@ it('tw(`...`)', async () => {
     import { tw } from "tw-tag";
     
     tw(\`
-      a b
-      c
+      a  b
+      \${"c"}
     \`);
   `
 
@@ -33,14 +33,14 @@ it('tw(`...`)', async () => {
     plugins: [plugin],
   })
 
-  expect(actual?.code).toBe('import { tw } from "tw-tag";\n"a b c";')
+  expect(actual?.code).toBe('import { tw } from "tw-tag";\n`a b ${"c"}`;')
 })
 
 it('tw("...")', async () => {
   const code = `
     import { tw } from "tw-tag";
     
-    tw("      a b      c    ");
+    tw("      a  b      c    ");
   `
 
   const actual = await transformAsync(code, {
@@ -55,8 +55,8 @@ it('import as other name', async () => {
     import { tw as OTHER_NAME } from "tw-tag";
     
     OTHER_NAME\`
-      a b
-      c
+      a  b
+      \${"c"}
     \`;
   `
 
@@ -64,5 +64,5 @@ it('import as other name', async () => {
     plugins: [plugin],
   })
 
-  expect(actual?.code).toBe('import { tw as OTHER_NAME } from "tw-tag";\n"a b c";')
+  expect(actual?.code).toBe('import { tw as OTHER_NAME } from "tw-tag";\n`a b ${"c"}`;')
 })

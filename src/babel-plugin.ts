@@ -1,10 +1,38 @@
-import type { PluginObj, types } from '@babel/core'
+import { type NodePath, type PluginObj, type types as t } from '@babel/core'
 
 const PACKAGE_NAME = 'tw-tag'
 const IMPORTED_NAME = 'tw'
 
+const tw = (template: string, trimStart: boolean, trimEnd: boolean) => {
+  let value = template.replace(/[\t\r\f\n ]+/g, ' ')
+
+  if (trimStart) {
+    value = value.replace(/^ +/, '')
+  }
+
+  if (trimEnd) {
+    value = value.replace(/ +$/, '')
+  }
+
+  return value
+}
+
+const replaceTemplateLiteral = (path: NodePath<t.Node>, template: t.TemplateLiteral) => {
+  template.quasis.forEach((quasi, i) => {
+    quasi.value = { raw: tw(quasi.value.raw, i === 0, quasi.tail) }
+  })
+
+  path.replaceWith(template)
+}
+
+const replaceStringLeteral = (path: NodePath<t.Node>, template: t.StringLiteral) => {
+  template.value = tw(template.value, true, true)
+
+  path.replaceWith(template)
+}
+
 interface PluginOptions {
-  types: typeof types
+  types: typeof t
 }
 
 const plugin = ({ types: t }: PluginOptions): PluginObj => {
@@ -22,45 +50,28 @@ const plugin = ({ types: t }: PluginOptions): PluginObj => {
         }
 
         const binding = path.scope.getBinding(path.node.local.name)
-        const references = binding?.referencePaths || []
 
-        const targets = references.flatMap(ref => {
+        binding?.referencePaths.forEach(ref => {
           const target = ref.parentPath
-          if (!target) {
-            return []
+
+          if (target?.isTaggedTemplateExpression()) {
+            replaceTemplateLiteral(target, target.node.quasi)
+            return
           }
 
-          if (target.isTaggedTemplateExpression()) {
-            const value = target.node.quasi.quasis[0]?.value.cooked
-
-            return value ? { target, value } : []
-          }
-
-          if (target.isCallExpression()) {
+          if (target?.isCallExpression()) {
             const arg = target.node.arguments[0]
 
-            if (arg?.type === 'StringLiteral') {
-              const value = arg.value
-
-              return { target, value }
-            }
-
             if (arg?.type === 'TemplateLiteral') {
-              const value = arg.quasis[0]?.value.cooked
-
-              return value ? { target, value } : []
+              replaceTemplateLiteral(target, arg)
+              return
             }
 
-            return []
+            if (arg?.type === 'StringLiteral') {
+              replaceStringLeteral(target, arg)
+              return
+            }
           }
-
-          return []
-        })
-
-        targets.forEach(v => {
-          const value = v.value.replace(/[\t\r\f\n ]+/g, ' ').replace(/^ | $/g, '')
-
-          v.target.replaceWith(t.stringLiteral(value))
         })
       },
     },
