@@ -16,8 +16,10 @@ type Normalize<T extends string> =
   T extends `${infer U}\t${infer R}` ? Normalize<`${U} ${R}`> :
   T
 
+type TwClassName<T extends string> = Trim<Compress<Normalize<T>>>
+
 interface Tw {
-  <T extends string>(template: T): Trim<Compress<Normalize<T>>>
+  <T extends string>(template: T): TwClassName<T>
   (template: TemplateStringsArray, ...args: string[]): string
 }
 
@@ -36,5 +38,5 @@ export const tw: Tw = (template: string | TemplateStringsArray, ...args: string[
 
   const className = value.replace(/[\t\r\f\n ]+/g, ' ').replace(/^ | $/g, '')
 
-  return className as string as any
+  return className as TwClassName<string>
 }
