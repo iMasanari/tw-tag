@@ -86,7 +86,7 @@ ref: https://github.com/microsoft/TypeScript/pull/49552
 
 To enable Tailwind CSS IntelliSense completion, add the setting below.
 
-```json
+```json5
 // settings.json
 {
   // ...
