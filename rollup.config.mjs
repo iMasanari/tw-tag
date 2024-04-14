@@ -17,6 +17,7 @@ export default defineConfig([
       { format: 'esm', dir: 'dist', entryFileNames: '[name].mjs', chunkFileNames: 'chunk-[name]-[hash].mjs' },
       { format: 'cjs', dir: 'dist', entryFileNames: '[name].js', chunkFileNames: 'chunk-[name]-[hash].js', exports: 'named' },
     ],
+    external: [/^node:/],
   }, {
     input,
     plugins: [dts()],
