@@ -82,6 +82,34 @@ The `` tw`...` `` format will be supported once `TemplateStringsArray` inference
 
 ref: https://github.com/microsoft/TypeScript/pull/49552
 
+
+## Babel options
+
+```js
+// babel.config.js
+module.exports = {
+  plugins: [
+    ['tw-tag/babel-plugin', {
+      devLabel: false,
+    }],
+  ],
+}
+```
+
+### `devLabel`
+
+type: `boolean` (default value: `process.env.NODE_ENV !== 'production'`)
+
+Add className for debugging. format: `DEV-[fileName]-[localName]`
+
+```js
+// some-file.js
+const variableName = tw`p4`
+
+// build when develop
+const variableName = `DEV-someFile-variableName p4`
+```
+
 ## `tw` support for VSCode
 
 To enable Tailwind CSS IntelliSense completion, add the setting below.

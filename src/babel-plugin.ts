@@ -110,7 +110,6 @@ const getDevLabel = (fileName: string | undefined, node: NodePath) => {
   const localName = getLocalName(node) || 'ANONYMOUS'
 
   return `DEV-${baseName}-${localName}`
-
 }
 
 interface PluginOptions {
