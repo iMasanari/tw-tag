@@ -1,6 +1,6 @@
 {
   "name": "tw-tag",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "",
   "main": "./dist/tw-tag.js",
   "module": "./dist/tw-tag.mjs",
