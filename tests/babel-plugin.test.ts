@@ -111,9 +111,9 @@ describe('devLabel options', () => {
       plugins: [[plugin, { devLabel: false }]],
     })
 
-    expect(actual?.code).toMatchInlineSnapshot(
-      '"const identifierStyle = `a b ${\\"c\\"}`;"'
-    )
+    expect(actual?.code).toMatchInlineSnapshot(`
+      "const identifierStyle = \`a b \${"c"}\`;"
+    `)
   })
 
   it('devLabel: true (identifier)', async () => {
@@ -131,9 +131,9 @@ describe('devLabel options', () => {
       plugins: [[plugin, { devLabel: true }]],
     })
 
-    expect(actual?.code).toMatchInlineSnapshot(
-      '"const identifierStyle = `DEV-test-identifierStyle a b ${\\"c\\"}`;"'
-    )
+    expect(actual?.code).toMatchInlineSnapshot(`
+      "const identifierStyle = \`DEV-test-identifierStyle a b \${"c"}\`;"
+    `)
   })
 
   it('devLabel: true (object)', async () => {
